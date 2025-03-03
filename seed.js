@@ -41,7 +41,11 @@ const seed = async () => {
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         name VARCHAR(100) UNIQUE NOT NULL,
         brand VARCHAR(100) NOT NULL,
-        model VARCHAR(100) NOT NULL
+        model VARCHAR(100) NOT NULL,
+        strap_material VARCHAR(50),         -- New field for strap material
+        metal_color VARCHAR(50),            -- New field for metal color
+        movement VARCHAR(50),               -- New field for movement type
+        case_size INT                       -- New field for case size in mm
       );
 
       -- Create reviews table
@@ -64,18 +68,19 @@ const seed = async () => {
       );
 
       -- Insert data into watches table
-      INSERT INTO watches (id, name, brand, model)
+     INSERT INTO watches (id, name, brand, model, strap_material, metal_color, movement, case_size)
       VALUES
-        (gen_random_uuid(), 'Submariner', 'Rolex', 'Submariner 116610LN'),
-        (gen_random_uuid(), 'Speedmaster', 'Omega', 'Speedmaster Professional'),
-        (gen_random_uuid(), 'Royal Oak', 'Audemars Piguet', 'Royal Oak 15400'),
-        (gen_random_uuid(), 'Patek Philippe Nautilus', 'Patek Philippe', 'Nautilus 5711'),
-        (gen_random_uuid(), 'Seiko Presage', 'Seiko', 'Presage Cocktail Time'),
-        (gen_random_uuid(), 'Omega Seamaster', 'Omega', 'Seamaster Diver 300M'),
-        (gen_random_uuid(), 'Tag Heuer Monaco', 'Tag Heuer', 'Monaco Caliber 11'),
-        (gen_random_uuid(), 'AP Royal Oak Offshore', 'Audemars Piguet', 'Royal Oak Offshore'),
-        (gen_random_uuid(), 'Grand Seiko', 'Grand Seiko', 'SBGA413'),
-        (gen_random_uuid(), 'Breitling Navitimer', 'Breitling', 'Navitimer 01');
+        (gen_random_uuid(), 'Submariner', 'Rolex', 'Submariner 116610LN', 'Oystersteel', 'Steel', 'Automatic', 40),
+        (gen_random_uuid(), 'Speedmaster', 'Omega', 'Speedmaster Professional', 'Leather', 'Steel', 'Manual', 42),
+        (gen_random_uuid(), 'Royal Oak', 'Audemars Piguet', 'Royal Oak 15400', 'Leather', 'Steel', 'Automatic', 41),
+        (gen_random_uuid(), 'Patek Philippe Nautilus', 'Patek Philippe', 'Nautilus 5711', 'Leather', 'Steel', 'Automatic', 40),
+        (gen_random_uuid(), 'Seiko Presage', 'Seiko', 'Presage Cocktail Time', 'Leather', 'Silver', 'Automatic', 40),
+        (gen_random_uuid(), 'Omega Seamaster', 'Omega', 'Seamaster Diver 300M', 'Rubber', 'Steel', 'Automatic', 42),
+        (gen_random_uuid(), 'Tag Heuer Monaco', 'Tag Heuer', 'Monaco Caliber 11', 'Leather', 'Steel', 'Automatic', 39),
+        (gen_random_uuid(), 'AP Royal Oak Offshore', 'Audemars Piguet', 'Royal Oak Offshore', 'Rubber', 'Steel', 'Automatic', 44),
+        (gen_random_uuid(), 'Grand Seiko', 'Grand Seiko', 'SBGA413', 'Leather', 'Silver', 'Spring Drive', 40),
+        (gen_random_uuid(), 'Breitling Navitimer', 'Breitling', 'Navitimer 01', 'Leather', 'Steel', 'Automatic', 43);
+
 
       -- Insert data into users table (with hashed passwords)
       INSERT INTO users (id, username, email, password)
