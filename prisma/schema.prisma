@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String    @id @default(cuid())
+  username String
+  email    String    @unique
+  password String
+  reviews  Review[]  @relation("UserReviews") // Removed onDelete here
+  comments Comment[]
+}
+
+model Watch {
+  id            String    @id @default(uuid())
+  name          String
+  brand         String
+  model         String
+  strapMaterial String
+  metalColor    String
+  movement      String
+  caseSize      Int
+  reviews       Review[]
+  comments      Comment[]
+}
+
+model Review {
+  id         String    @id @default(cuid())
+  userId     String
+  watchId    String
+  reviewText String
+  score      Int
+  user       User      @relation("UserReviews", fields: [userId], references: [id], onDelete: Cascade) // onDelete moved here
+  watch      Watch     @relation(fields: [watchId], references: [id])
+  comments   Comment[]
+}
+
+model Comment {
+  id          String  @id @default(uuid())
+  userId      String
+  reviewId    String
+  commentText String
+  user        User    @relation(fields: [userId], references: [id])
+  review      Review  @relation(fields: [reviewId], references: [id])
+  Watch       Watch?  @relation(fields: [watchId], references: [id])
+  watchId     String?
+}
