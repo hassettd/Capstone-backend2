@@ -3,7 +3,8 @@ const express = require("express");
 const morgan = require("morgan");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { client } = require("./common");
+const { client } = require("./common.js");
+
 const {
   getWatches,
   getReviewsForWatch,
@@ -533,7 +534,7 @@ app.delete(
   }
 );
 
-// cleanly shut down the connection
+// Clean shutdown handler
 process.on("SIGINT", () => {
   client.end(() => {
     console.log("Database connection closed");

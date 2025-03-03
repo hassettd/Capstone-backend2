@@ -1,5 +1,5 @@
-const { prisma } = require("./prismaClient"); // assuming you have set up prismaClient
-
+const { PrismaClient } = require("@prisma/client"); // assuming you have set up prismaClient
+const prisma = new PrismaClient();
 // Get all watches
 const getWatches = async () => {
   const watches = await prisma.watch.findMany({
@@ -43,7 +43,11 @@ const getAverageScoreForWatch = async (watchId) => {
   return averageScore._avg.score || 0;
 };
 
-module.exports = { getWatches, getReviewsForWatch, getAverageScoreForWatch };
+module.exports = {
+  getWatches,
+  getReviewsForWatch,
+  getAverageScoreForWatch,
+};
 // working verdion
 // const { client } = require("./common");
 
