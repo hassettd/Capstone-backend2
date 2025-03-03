@@ -66,7 +66,7 @@ const seed = async () => {
         comment_text TEXT NOT NULL,
         created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
       );
-
+      CREATE EXTENSION IF NOT EXISTS pgcrypto;
       -- Insert data into watches table
      INSERT INTO watches (id, name, brand, model, strap_material, metal_color, movement, case_size)
       VALUES
@@ -79,6 +79,16 @@ const seed = async () => {
         (gen_random_uuid(), 'Tag Heuer Monaco', 'Tag Heuer', 'Monaco Caliber 11', 'Leather', 'Steel', 'Automatic', 39),
         (gen_random_uuid(), 'AP Royal Oak Offshore', 'Audemars Piguet', 'Royal Oak Offshore', 'Rubber', 'Steel', 'Automatic', 44),
         (gen_random_uuid(), 'Grand Seiko', 'Grand Seiko', 'SBGA413', 'Leather', 'Silver', 'Spring Drive', 40),
+        (gen_random_uuid(), 'Rolex Day-Date', 'Rolex', 'Day-Date 40', 'Leather', 'Gold', 'Automatic', 40),
+        (gen_random_uuid(), 'IWC Pilot', 'IWC', 'Big Pilot', 'Leather', 'Steel', 'Automatic', 46),
+        (gen_random_uuid(), 'Hublot Big Bang', 'Hublot', 'Big Bang Unico', 'Rubber', 'Gold', 'Automatic', 45),
+        (gen_random_uuid(), 'Panerai Luminor', 'Panerai', 'Luminor Marina 1950', 'Leather', 'Steel', 'Automatic', 44),
+        (gen_random_uuid(), 'Breguet Classique', 'Breguet', 'Classique 5177', 'Leather', 'Rose Gold', 'Automatic', 39),
+        (gen_random_uuid(), 'Tag Heuer Carrera', 'Tag Heuer', 'Carrera Caliber 16', 'Leather', 'Steel', 'Automatic', 41),
+        (gen_random_uuid(), 'Longines Master Collection', 'Longines', 'Master Collection 40mm', 'Leather', 'Steel', 'Automatic', 40),
+        (gen_random_uuid(), 'Jaeger-LeCoultre Reverso', 'Jaeger-LeCoultre', 'Reverso Classic', 'Leather', 'Steel', 'Manual', 42),
+        (gen_random_uuid(), 'Vacheron Constantin Overseas', 'Vacheron Constantin', 'Overseas 4500V', 'Rubber', 'Steel', 'Automatic', 41),
+        (gen_random_uuid(), 'A. Lange & Söhne Saxonia', 'A. Lange & Söhne', 'Saxonia Thin', 'Leather', 'Platinum', 'Manual', 40),
         (gen_random_uuid(), 'Breitling Navitimer', 'Breitling', 'Navitimer 01', 'Leather', 'Steel', 'Automatic', 43);
 
 

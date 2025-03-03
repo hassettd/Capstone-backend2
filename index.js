@@ -17,17 +17,21 @@ const PORT = 3000;
 
 app.use(express.json());
 app.use(morgan("dev"));
+
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) {
   console.error("JWT_SECRET is missing");
   process.exit(1);
 }
 
+// Middleware for JWT Authentication
 const authenticateJWT = (req, res, next) => {
+  // Extract token from Authorization header (format: "Bearer <token>")
   const token =
     req.header("Authorization") &&
     req.header("Authorization").replace("Bearer ", "");
 
+  // If no token is provided, return a 401 error
   if (!token) {
     return res
       .status(401)
@@ -43,6 +47,10 @@ const authenticateJWT = (req, res, next) => {
     next();
   });
 };
+// Example of a protected route using the authenticateJWT middleware
+app.get("/secure-data", authenticateJWT, (req, res) => {
+  res.send("This is secured data!");
+});
 
 // Route for getting all watches
 app.get("/watches", async (req, res) => {
