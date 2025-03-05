@@ -12,12 +12,12 @@ model User {
   username String
   email    String    @unique
   password String
-  reviews  Review[]  @relation("UserReviews") // Removed onDelete here
-  comments Comment[]
+  reviews  Review[]  @relation("UserReviews") // No onDelete here
+  comments Comment[] // No onDelete here
 }
 
 model Watch {
-  id            String    @id @default(uuid())
+  id            String   @id @default(uuid())
   name          String
   brand         String
   model         String
@@ -26,7 +26,6 @@ model Watch {
   movement      String
   caseSize      Int
   reviews       Review[]
-  comments      Comment[]
 }
 
 model Review {
@@ -35,18 +34,16 @@ model Review {
   watchId    String
   reviewText String
   score      Int
-  user       User      @relation("UserReviews", fields: [userId], references: [id], onDelete: Cascade) // onDelete moved here
+  user       User      @relation("UserReviews", fields: [userId], references: [id], onDelete: Cascade) // Cascade delete reviews
   watch      Watch     @relation(fields: [watchId], references: [id])
   comments   Comment[]
 }
 
 model Comment {
-  id          String  @id @default(uuid())
+  id          String @id @default(uuid())
   userId      String
   reviewId    String
   commentText String
-  user        User    @relation(fields: [userId], references: [id])
-  review      Review  @relation(fields: [reviewId], references: [id])
-  Watch       Watch?  @relation(fields: [watchId], references: [id])
-  watchId     String?
+  user        User   @relation(fields: [userId], references: [id])
+  review      Review @relation(fields: [reviewId], references: [id])
 }

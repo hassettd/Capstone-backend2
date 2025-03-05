@@ -8,11 +8,18 @@ const prisma = new PrismaClient();
 
 const seed = async () => {
   try {
-    // Clear existing data
-    await prisma.user.deleteMany({});
-    await prisma.watch.deleteMany({});
+    // Clear existing data in the correct order
+    // Step 1: Delete comments associated with users
+    await prisma.comment.deleteMany({}); // This will delete all comments first
+
+    // Step 2: Delete reviews that are associated with watches and users
     await prisma.review.deleteMany({});
-    await prisma.comment.deleteMany({});
+
+    // Step 3: Delete watches (since comments and reviews may reference watches)
+    await prisma.watch.deleteMany({});
+
+    // Step 4: Finally, delete users
+    await prisma.user.deleteMany({}); // This deletes the users after clearing related data
 
     // Hash the passwords before inserting them into the users table
     const hashedPasswords = await Promise.all([

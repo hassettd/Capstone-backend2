@@ -1,10 +1,15 @@
-const { Client } = require("pg");
+import { PrismaClient } from "@prisma/client";
 
-const client = new Client({
-  connectionString: process.env.DATABASE_URL, // Make sure this is set correctly
-});
+export const prisma = new PrismaClient();
 
-module.exports = { client };
+//working version
+// const { Client } = require("pg");
+
+// const client = new Client({
+//   connectionString: process.env.DATABASE_URL, // Make sure this is set correctly
+// });
+
+// module.exports = { client };
 
 // const { PrismaClient } = require("@prisma/client");
 
