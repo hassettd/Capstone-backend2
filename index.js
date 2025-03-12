@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const cors = require("cors");
 const morgan = require("morgan");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -25,6 +26,15 @@ if (!JWT_SECRET) {
   console.error("JWT_SECRET is missing");
   process.exit(1);
 }
+
+// Enable CORS for requests from localhost:5173
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Allow requests only from your frontend
+    methods: ["GET", "POST", "PUT", "DELETE"], // Define allowed HTTP methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
+  })
+);
 
 // Middleware for JWT Authentication
 const authenticateJWT = (req, res, next) => {
