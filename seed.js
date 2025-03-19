@@ -39,9 +39,11 @@ const seed = async () => {
     const watches = await Promise.all([
       prisma.watch.create({
         data: {
-          name: "Submariner",
+          name: "Rolex Submariner",
           brand: "Rolex",
           model: "Submariner 116610LN",
+          imageUrl:
+            "https://upload.wikimedia.org/wikipedia/commons/c/cd/Rolex-Submariner.jpg",
           strapMaterial: "Oystersteel",
           metalColor: "Steel",
           movement: "Automatic",
@@ -50,9 +52,11 @@ const seed = async () => {
       }),
       prisma.watch.create({
         data: {
-          name: "Speedmaster",
+          name: "Omega Speedmaster",
           brand: "Omega",
           model: "Speedmaster Professional",
+          imageUrl:
+            "https://upload.wikimedia.org/wikipedia/commons/0/06/Omega_speedmaster_reduced_351050.jpg",
           strapMaterial: "Leather",
           metalColor: "Steel",
           movement: "Manual",
@@ -61,9 +65,11 @@ const seed = async () => {
       }),
       prisma.watch.create({
         data: {
-          name: "Royal Oak",
+          name: "Audemars Piguet Royal Oak",
           brand: "Audemars Piguet",
           model: "Royal Oak 15400",
+          imageUrl:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Audemars_2385.jpg/1024px-Audemars_2385.jpg",
           strapMaterial: "Leather",
           metalColor: "Steel",
           movement: "Automatic",
@@ -75,6 +81,8 @@ const seed = async () => {
           name: "Patek Philippe Nautilus",
           brand: "Patek Philippe",
           model: "Nautilus 5711",
+          imageUrl:
+            "https://robbreport.com/wp-content/uploads/2022/10/PP_5811_1G_001_AMB_fond.jpg?w=1000",
           strapMaterial: "Leather",
           metalColor: "Steel",
           movement: "Automatic",
@@ -86,6 +94,8 @@ const seed = async () => {
           name: "Seiko Presage",
           brand: "Seiko",
           model: "Presage Cocktail Time",
+          imageUrl:
+            "https://seikousa.com/cdn/shop/files/SSA459_1_450x450.png?v=1686324996",
           strapMaterial: "Leather",
           metalColor: "Silver",
           movement: "Automatic",
@@ -97,6 +107,8 @@ const seed = async () => {
           name: "Omega Seamaster",
           brand: "Omega",
           model: "Seamaster Diver 300M",
+          imageUrl:
+            "https://upload.wikimedia.org/wikipedia/commons/e/e1/Bond-Omega.JPG",
           strapMaterial: "Rubber",
           metalColor: "Steel",
           movement: "Automatic",
@@ -108,6 +120,8 @@ const seed = async () => {
           name: "Tag Heuer Monaco",
           brand: "Tag Heuer",
           model: "Monaco Caliber 11",
+          imageUrl:
+            "https://www.tagheuer.com/on/demandware.static/-/Sites-tagheuer-master/default/dw6d697770/TAG_Heuer_Monaco/CAW211P.FC6356/CAW211P.FC6356_1000.png",
           strapMaterial: "Leather",
           metalColor: "Steel",
           movement: "Automatic",
@@ -119,6 +133,8 @@ const seed = async () => {
           name: "AP Royal Oak Offshore",
           brand: "Audemars Piguet",
           model: "Royal Oak Offshore",
+          imageUrl:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Royal_Oak_Offshore_watch_by_Audemars_Piguet.JPG/1280px-Royal_Oak_Offshore_watch_by_Audemars_Piguet.JPG",
           strapMaterial: "Rubber",
           metalColor: "Steel",
           movement: "Automatic",
@@ -130,6 +146,8 @@ const seed = async () => {
           name: "Grand Seiko",
           brand: "Grand Seiko",
           model: "SBGA413",
+          imageUrl:
+            "https://www.grand-seiko.com/us-en/-/media/Images/GlobalEn/GrandSeiko/Home/collections/Products/SBGA413/04_SHUNBUN-img02.jpg",
           strapMaterial: "Leather",
           metalColor: "Silver",
           movement: "Spring Drive",
@@ -141,6 +159,8 @@ const seed = async () => {
           name: "Rolex Day-Date",
           brand: "Rolex",
           model: "Day-Date 40",
+          imageUrl:
+            "https://media.rolex.com/image/upload/q_auto:eco/f_auto/t_v7-majesty/c_limit,w_800/v1/catalogue/2024/upright-c/m228238-0042",
           strapMaterial: "Leather",
           metalColor: "Gold",
           movement: "Automatic",
@@ -152,6 +172,8 @@ const seed = async () => {
           name: "IWC Pilot",
           brand: "IWC",
           model: "Big Pilot",
+          imageUrl:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/IWC_Big_Pilot_St_Exupery_Edition_%28cropped%29.jpg/800px-IWC_Big_Pilot_St_Exupery_Edition_%28cropped%29.jpg",
           strapMaterial: "Leather",
           metalColor: "Steel",
           movement: "Automatic",
@@ -163,6 +185,8 @@ const seed = async () => {
           name: "Hublot Big Bang",
           brand: "Hublot",
           model: "Big Bang Unico",
+          imageUrl:
+            "https://www.hublot.com/sites/default/files/styles/global_medium_desktop_1x/public/2023-04/Big-Bang-unico-king-gold-44-mm-Profile-shot-lifestyle.jpg",
           strapMaterial: "Rubber",
           metalColor: "Gold",
           movement: "Automatic",
@@ -174,6 +198,8 @@ const seed = async () => {
           name: "Panerai Luminor",
           brand: "Panerai",
           model: "Luminor Marina 1950",
+          imageUrl:
+            "https://www.newportwatchclub.com/cdn/shop/products/PaneraiPAM00352LuminorMarina19503Days_BoxShot_-1.jpg",
           strapMaterial: "Leather",
           metalColor: "Steel",
           movement: "Automatic",
@@ -185,6 +211,8 @@ const seed = async () => {
           name: "Breguet Classique",
           brand: "Breguet",
           model: "Classique 5177",
+          imageUrl:
+            "https://www.breguet.com/sites/default/files/images/5177BR299V6_Soldat.png",
           strapMaterial: "Leather",
           metalColor: "Rose Gold",
           movement: "Automatic",
@@ -196,6 +224,9 @@ const seed = async () => {
           name: "Tag Heuer Carrera",
           brand: "Tag Heuer",
           model: "Carrera Caliber 16",
+          imageUrl:
+            "https://www.tagheuer.com/on/demandware.static/-/Sites-tagheuer-master/default/dw5b3ae0a1/TAG_Heuer_Carrera/CV201AP.FC6429/CV201AP.FC6429_1000.png",
+          strapMaterial: "Leather",
           strapMaterial: "Leather",
           metalColor: "Steel",
           movement: "Automatic",
@@ -207,6 +238,8 @@ const seed = async () => {
           name: "Longines Master Collection",
           brand: "Longines",
           model: "Master Collection 40mm",
+          imageUrl:
+            "https://api.ecom.longines.com/media/catalog/product/l/o/longines-master-collection-l2-793-4-78-3-bottom-detailed-view-2286x2000-51-1733406403.jpg",
           strapMaterial: "Leather",
           metalColor: "Steel",
           movement: "Automatic",
@@ -218,6 +251,8 @@ const seed = async () => {
           name: "Jaeger-LeCoultre Reverso",
           brand: "Jaeger-LeCoultre",
           model: "Reverso Classic",
+          imageUrl:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Jaeger-LeCoultre-Reverso.jpg/800px-Jaeger-LeCoultre-Reverso.jpg",
           strapMaterial: "Leather",
           metalColor: "Steel",
           movement: "Manual",
@@ -229,6 +264,8 @@ const seed = async () => {
           name: "Vacheron Constantin Overseas",
           brand: "Vacheron Constantin",
           model: "Overseas 4500V",
+          imageUrl:
+            "https://www.vacheron-constantin.com/dam/vac/watches-wonders/2023/Overseas-Straps.jpg",
           strapMaterial: "Rubber",
           metalColor: "Steel",
           movement: "Automatic",
@@ -240,6 +277,8 @@ const seed = async () => {
           name: "A. Lange & Söhne Saxonia",
           brand: "A. Lange & Söhne",
           model: "Saxonia Thin",
+          imageUrl:
+            "https://img.alange-soehne.com/intro-block-media-3/af4444b7b7417a9de84a399dbb202f626a5de284.jpg",
           strapMaterial: "Leather",
           metalColor: "Platinum",
           movement: "Manual",
@@ -251,6 +290,8 @@ const seed = async () => {
           name: "Breitling Navitimer",
           brand: "Breitling",
           model: "Navitimer 01",
+          imageUrl:
+            "https://www-storefront.breitling.com/api/image-proxy/www-breitling.eu.saleor.cloud/media/thumbnails/products/ab0139241c1p1-three-quarter_fe4a57cf_thumbnail_1024.webp",
           strapMaterial: "Leather",
           metalColor: "Steel",
           movement: "Automatic",
