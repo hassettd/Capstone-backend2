@@ -394,7 +394,7 @@ const seed = async () => {
       {
         userId: createdUsers[4].id,
         watchId: createdWatches[4].id,
-        reviewText: "Perfect for casual wear.",
+        reviewText: "Perfect for casual everyday wear.",
         score: 4,
       },
       {
