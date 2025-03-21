@@ -364,6 +364,9 @@ app.get("/api/reviews/me", authenticateJWT, async (req, res) => {
   try {
     const reviews = await prisma.review.findMany({
       where: { userId },
+      include: {
+        watch: true, // Ensure watch data is included here
+      },
     });
     res.status(200).json(reviews);
   } catch (err) {
