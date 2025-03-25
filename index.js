@@ -287,12 +287,24 @@ app.get("/api/watches/:watchId", async (req, res) => {
 
 // GET /api/watches/:watchId/reviews
 app.get("/api/watches/:watchId/reviews", async (req, res) => {
-  const { watchId } = req.params; // Changed to watchId
+  const { watchId } = req.params;
+
   try {
     const reviews = await prisma.review.findMany({
       where: { watchId: watchId }, // Ensure you're querying reviews by watchId
-      include: { user: true },
+      include: {
+        user: true, // Include user information who posted the review
+        comments: true, // Include comments associated with each review
+      },
     });
+
+    if (!reviews || reviews.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No reviews found for this watch." });
+    }
+
+    // Return the reviews along with comments
     res.status(200).json(reviews);
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
