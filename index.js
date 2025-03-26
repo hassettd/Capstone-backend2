@@ -141,6 +141,17 @@ app.get("/search-watches", async (req, res) => {
       take: parsedLimit,
     });
 
+    // Fetch the total count of matching watches
+    const totalCount = await prisma.watch.count({
+      where: {
+        OR: [
+          { name: { contains: query, mode: "insensitive" } },
+          { brand: { contains: query, mode: "insensitive" } },
+          { model: { contains: query, mode: "insensitive" } },
+        ],
+      },
+    });
+
     // Log the watches fetched from the database
     console.log("Fetched Watches:", watches);
 
@@ -160,8 +171,8 @@ app.get("/search-watches", async (req, res) => {
       watches.sort((a, b) => a.name.localeCompare(b.name));
     }
 
-    // Return the sorted watches
-    res.json(watches);
+    // Return both watches and totalCount
+    res.json({ watches, totalCount });
   } catch (error) {
     console.error("Error fetching watches:", error);
     res
