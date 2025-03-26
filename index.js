@@ -230,7 +230,7 @@ app.get("/api/auth/me", authenticateJWT, async (req, res) => {
 
 // GET /api/watches
 app.get("/api/watches", async (req, res) => {
-  const { page = 1, limit = 10, brand, model } = req.query;
+  const { page = 1, limit = 10, brand, model, sort } = req.query;
 
   const pageNumber = parseInt(page, 10);
   const pageLimit = parseInt(limit, 10);
@@ -252,11 +252,34 @@ app.get("/api/watches", async (req, res) => {
     };
   }
 
+  // Prepare sorting dynamically based on 'sort' query
+  let orderBy = {};
+
+  if (sort) {
+    switch (sort) {
+      case "name_asc":
+        orderBy = { name: "asc" };
+        break;
+      case "name_desc":
+        orderBy = { name: "desc" };
+        break;
+      case "case_size_asc":
+        orderBy = { caseSize: "asc" };
+        break;
+      case "case_size_desc":
+        orderBy = { caseSize: "desc" };
+        break;
+      default:
+        orderBy = {}; // No sorting if the sort query is invalid
+    }
+  }
+
   try {
     const watches = await prisma.watch.findMany({
       where: whereConditions, // Apply dynamic filters
       skip: (pageNumber - 1) * pageLimit, // Pagination: skip items based on page number
       take: pageLimit, // Limit number of items per page
+      orderBy, // Apply dynamic sorting
     });
 
     // Return the fetched watches
@@ -266,7 +289,6 @@ app.get("/api/watches", async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 });
-
 // GET /api/watches/:watchId
 app.get("/api/watches/:watchId", async (req, res) => {
   const { watchId } = req.params;
