@@ -125,6 +125,9 @@ app.get("/search-watches", async (req, res) => {
         .json({ message: "Invalid 'limit' or 'page' parameter" });
     }
 
+    // Log the query for debugging
+    console.log("Search Query:", query);
+
     // Fetch all matching watches
     const watches = await prisma.watch.findMany({
       where: {
@@ -135,8 +138,11 @@ app.get("/search-watches", async (req, res) => {
         ],
       },
       skip: (parsedPage - 1) * parsedLimit,
-      take: parsedLimit, // Ensure 'take' is an integer
+      take: parsedLimit,
     });
+
+    // Log the watches fetched from the database
+    console.log("Fetched Watches:", watches);
 
     // If no watches are returned, handle it gracefully
     if (!watches || watches.length === 0) {
