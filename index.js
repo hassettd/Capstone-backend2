@@ -110,40 +110,24 @@ app.get("/watches/:id/average", async (req, res) => {
 app.get("/search-watches", async (req, res) => {
   const { query, limit = 10, page = 1, sort = "name_asc" } = req.query;
 
-  // Define possible sorting options with raw SQL for case_size
+  // Define possible sorting options
   const sortMap = {
-    name_asc: { name: "asc" },
-    name_desc: { name: "desc" },
-    case_size_asc: {
-      case_size: {
-        // Raw SQL to extract numeric part for sorting
-        raw: `CAST(SUBSTRING_INDEX(case_size, ' ', 1) AS UNSIGNED) ASC`,
-      },
-    },
-    case_size_desc: {
-      case_size: {
-        // Raw SQL to extract numeric part for sorting
-        raw: `CAST(SUBSTRING_INDEX(case_size, ' ', 1) AS UNSIGNED) DESC`,
-      },
-    },
+    name_asc: "name ASC",
+    name_desc: "name DESC",
+    case_size_asc: "CAST(SUBSTRING_INDEX(case_size, ' ', 1) AS UNSIGNED) ASC", // Sorting by numeric value of case_size
+    case_size_desc: "CAST(SUBSTRING_INDEX(case_size, ' ', 1) AS UNSIGNED) DESC", // Sorting by numeric value of case_size
   };
 
-  const order = sortMap[sort] || { name: "asc" }; // Default to sorting by name ascending
+  const order = sortMap[sort] || "name ASC"; // Default to sorting by name ascending
 
   try {
-    // Fetch watches from the database with pagination, filtering, and sorting
-    const watches = await prisma.watch.findMany({
-      where: {
-        OR: [
-          { name: { contains: query, mode: "insensitive" } },
-          { brand: { contains: query, mode: "insensitive" } },
-          { model: { contains: query, mode: "insensitive" } },
-        ],
-      },
-      skip: (page - 1) * limit,
-      take: limit,
-      orderBy: order, // Apply sorting based on the selected option
-    });
+    // Use raw SQL query to handle complex sorting logic
+    const watches = await prisma.$queryRawUnsafe(`
+      SELECT * FROM Watch
+      WHERE name LIKE '%${query}%' OR brand LIKE '%${query}%' OR model LIKE '%${query}%'
+      ORDER BY ${order}
+      LIMIT ${limit} OFFSET ${(page - 1) * limit}
+    `);
 
     // Return the sorted watches
     res.json(watches);
