@@ -124,19 +124,16 @@ app.get("/search-watches", async (req, res) => {
       take: limit,
     });
 
+    // If no watches are returned, handle it gracefully
+    if (!watches || watches.length === 0) {
+      return res.status(404).json({ message: "No watches found" });
+    }
+
     // Handle sorting in JavaScript after fetching the results
     if (sort === "case_size_asc") {
-      watches.sort((a, b) => {
-        const aSize = parseInt(a.case_size.split(" ")[0], 10);
-        const bSize = parseInt(b.case_size.split(" ")[0], 10);
-        return aSize - bSize;
-      });
+      watches.sort((a, b) => a.caseSize - b.caseSize);
     } else if (sort === "case_size_desc") {
-      watches.sort((a, b) => {
-        const aSize = parseInt(a.case_size.split(" ")[0], 10);
-        const bSize = parseInt(b.case_size.split(" ")[0], 10);
-        return bSize - aSize;
-      });
+      watches.sort((a, b) => b.caseSize - a.caseSize);
     } else if (sort === "name_desc") {
       watches.sort((a, b) => b.name.localeCompare(a.name));
     } else {
@@ -147,7 +144,9 @@ app.get("/search-watches", async (req, res) => {
     res.json(watches);
   } catch (error) {
     console.error("Error fetching watches:", error);
-    res.status(500).send("Internal Server Error");
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
   }
 });
 
