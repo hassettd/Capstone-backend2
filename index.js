@@ -107,10 +107,31 @@ app.get("/watches/:id/average", async (req, res) => {
   }
 });
 
-// Route to search for watches by name
 app.get("/search-watches", async (req, res) => {
-  const { query } = req.query;
+  const { query, limit = 10, page = 1, sort = "name_asc" } = req.query;
+
+  // Define possible sorting options with raw SQL for case_size
+  const sortMap = {
+    name_asc: { name: "asc" },
+    name_desc: { name: "desc" },
+    case_size_asc: {
+      case_size: {
+        // Raw SQL to extract numeric part for sorting
+        raw: `CAST(SUBSTRING_INDEX(case_size, ' ', 1) AS UNSIGNED) ASC`,
+      },
+    },
+    case_size_desc: {
+      case_size: {
+        // Raw SQL to extract numeric part for sorting
+        raw: `CAST(SUBSTRING_INDEX(case_size, ' ', 1) AS UNSIGNED) DESC`,
+      },
+    },
+  };
+
+  const order = sortMap[sort] || { name: "asc" }; // Default to sorting by name ascending
+
   try {
+    // Fetch watches from the database with pagination, filtering, and sorting
     const watches = await prisma.watch.findMany({
       where: {
         OR: [
@@ -119,7 +140,12 @@ app.get("/search-watches", async (req, res) => {
           { model: { contains: query, mode: "insensitive" } },
         ],
       },
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: order, // Apply sorting based on the selected option
     });
+
+    // Return the sorted watches
     res.json(watches);
   } catch (error) {
     console.error("Error fetching watches:", error);
