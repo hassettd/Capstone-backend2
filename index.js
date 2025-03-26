@@ -110,24 +110,38 @@ app.get("/watches/:id/average", async (req, res) => {
 app.get("/search-watches", async (req, res) => {
   const { query, limit = 10, page = 1, sort = "name_asc" } = req.query;
 
-  // Define possible sorting options
-  const sortMap = {
-    name_asc: "name ASC",
-    name_desc: "name DESC",
-    case_size_asc: "CAST(SUBSTRING_INDEX(case_size, ' ', 1) AS UNSIGNED) ASC", // Sorting by numeric value of case_size
-    case_size_desc: "CAST(SUBSTRING_INDEX(case_size, ' ', 1) AS UNSIGNED) DESC", // Sorting by numeric value of case_size
-  };
-
-  const order = sortMap[sort] || "name ASC"; // Default to sorting by name ascending
-
   try {
-    // Use raw SQL query to handle complex sorting logic
-    const watches = await prisma.$queryRawUnsafe(`
-      SELECT * FROM Watch
-      WHERE name LIKE '%${query}%' OR brand LIKE '%${query}%' OR model LIKE '%${query}%'
-      ORDER BY ${order}
-      LIMIT ${limit} OFFSET ${(page - 1) * limit}
-    `);
+    // Fetch all matching watches
+    const watches = await prisma.watch.findMany({
+      where: {
+        OR: [
+          { name: { contains: query, mode: "insensitive" } },
+          { brand: { contains: query, mode: "insensitive" } },
+          { model: { contains: query, mode: "insensitive" } },
+        ],
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    // Handle sorting in JavaScript after fetching the results
+    if (sort === "case_size_asc") {
+      watches.sort((a, b) => {
+        const aSize = parseInt(a.case_size.split(" ")[0], 10);
+        const bSize = parseInt(b.case_size.split(" ")[0], 10);
+        return aSize - bSize;
+      });
+    } else if (sort === "case_size_desc") {
+      watches.sort((a, b) => {
+        const aSize = parseInt(a.case_size.split(" ")[0], 10);
+        const bSize = parseInt(b.case_size.split(" ")[0], 10);
+        return bSize - aSize;
+      });
+    } else if (sort === "name_desc") {
+      watches.sort((a, b) => b.name.localeCompare(a.name));
+    } else {
+      watches.sort((a, b) => a.name.localeCompare(b.name));
+    }
 
     // Return the sorted watches
     res.json(watches);
