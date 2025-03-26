@@ -111,9 +111,19 @@ app.get("/search-watches", async (req, res) => {
   const { query, limit = 10, page = 1, sort = "name_asc" } = req.query;
 
   try {
-    // Parse limit and page to integers to ensure proper type handling
+    // Ensure limit and page are parsed as integers
     const parsedLimit = parseInt(limit, 10);
     const parsedPage = parseInt(page, 10);
+
+    // Log parsed values for debugging
+    console.log("Parsed Limit:", parsedLimit, "Parsed Page:", parsedPage);
+
+    // Validate parsed values
+    if (isNaN(parsedLimit) || isNaN(parsedPage)) {
+      return res
+        .status(400)
+        .json({ message: "Invalid 'limit' or 'page' parameter" });
+    }
 
     // Fetch all matching watches
     const watches = await prisma.watch.findMany({
@@ -125,7 +135,7 @@ app.get("/search-watches", async (req, res) => {
         ],
       },
       skip: (parsedPage - 1) * parsedLimit,
-      take: parsedLimit, // Ensure `take` is an integer
+      take: parsedLimit, // Ensure 'take' is an integer
     });
 
     // If no watches are returned, handle it gracefully
