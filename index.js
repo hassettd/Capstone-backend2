@@ -107,28 +107,10 @@ app.get("/watches/:id/average", async (req, res) => {
   }
 });
 
+// Route to search for watches by name
 app.get("/search-watches", async (req, res) => {
-  const { query, limit = 10, page = 1, sort = "name_asc" } = req.query;
-
+  const { query } = req.query;
   try {
-    // Ensure limit and page are parsed as integers
-    const parsedLimit = parseInt(limit, 10);
-    const parsedPage = parseInt(page, 10);
-
-    // Log parsed values for debugging
-    console.log("Parsed Limit:", parsedLimit, "Parsed Page:", parsedPage);
-
-    // Validate parsed values
-    if (isNaN(parsedLimit) || isNaN(parsedPage)) {
-      return res
-        .status(400)
-        .json({ message: "Invalid 'limit' or 'page' parameter" });
-    }
-
-    // Log the query for debugging
-    console.log("Search Query:", query);
-
-    // Fetch all matching watches
     const watches = await prisma.watch.findMany({
       where: {
         OR: [
@@ -137,47 +119,11 @@ app.get("/search-watches", async (req, res) => {
           { model: { contains: query, mode: "insensitive" } },
         ],
       },
-      skip: (parsedPage - 1) * parsedLimit,
-      take: parsedLimit,
     });
-
-    // Fetch the total count of matching watches
-    const totalCount = await prisma.watch.count({
-      where: {
-        OR: [
-          { name: { contains: query, mode: "insensitive" } },
-          { brand: { contains: query, mode: "insensitive" } },
-          { model: { contains: query, mode: "insensitive" } },
-        ],
-      },
-    });
-
-    // Log the watches fetched from the database
-    console.log("Fetched Watches:", watches);
-
-    // If no watches are returned, handle it gracefully
-    if (!watches || watches.length === 0) {
-      return res.status(404).json({ message: "No watches found" });
-    }
-
-    // Handle sorting in JavaScript after fetching the results
-    if (sort === "case_size_asc") {
-      watches.sort((a, b) => a.caseSize - b.caseSize);
-    } else if (sort === "case_size_desc") {
-      watches.sort((a, b) => b.caseSize - a.caseSize);
-    } else if (sort === "name_desc") {
-      watches.sort((a, b) => b.name.localeCompare(a.name));
-    } else {
-      watches.sort((a, b) => a.name.localeCompare(b.name));
-    }
-
-    // Return both watches and totalCount
-    res.json({ watches, totalCount });
+    res.json(watches);
   } catch (error) {
     console.error("Error fetching watches:", error);
-    res
-      .status(500)
-      .json({ message: "Internal Server Error", error: error.message });
+    res.status(500).send("Internal Server Error");
   }
 });
 
@@ -284,7 +230,7 @@ app.get("/api/auth/me", authenticateJWT, async (req, res) => {
 
 // GET /api/watches
 app.get("/api/watches", async (req, res) => {
-  const { page = 1, limit = 10, brand, model, sort } = req.query;
+  const { page = 1, limit = 10, brand, model } = req.query;
 
   const pageNumber = parseInt(page, 10);
   const pageLimit = parseInt(limit, 10);
@@ -306,34 +252,11 @@ app.get("/api/watches", async (req, res) => {
     };
   }
 
-  // Prepare sorting dynamically based on 'sort' query
-  let orderBy = {};
-
-  if (sort) {
-    switch (sort) {
-      case "name_asc":
-        orderBy = { name: "asc" };
-        break;
-      case "name_desc":
-        orderBy = { name: "desc" };
-        break;
-      case "case_size_asc":
-        orderBy = { caseSize: "asc" };
-        break;
-      case "case_size_desc":
-        orderBy = { caseSize: "desc" };
-        break;
-      default:
-        orderBy = {}; // No sorting if the sort query is invalid
-    }
-  }
-
   try {
     const watches = await prisma.watch.findMany({
       where: whereConditions, // Apply dynamic filters
       skip: (pageNumber - 1) * pageLimit, // Pagination: skip items based on page number
       take: pageLimit, // Limit number of items per page
-      orderBy, // Apply dynamic sorting
     });
 
     // Return the fetched watches
@@ -343,6 +266,7 @@ app.get("/api/watches", async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 });
+
 // GET /api/watches/:watchId
 app.get("/api/watches/:watchId", async (req, res) => {
   const { watchId } = req.params;
