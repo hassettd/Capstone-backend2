@@ -27,14 +27,23 @@ if (!JWT_SECRET) {
   process.exit(1);
 }
 
-// Enable CORS for requests from localhost:5173
+// Enable CORS for requests from localhost and Netlify site
 app.use(
   cors({
-    origin: "http://localhost:5173", // Allow requests only from your frontend
-    methods: ["GET", "POST", "PUT", "DELETE"], // Define allowed HTTP methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
+    origin: ["http://localhost:5173", "https://capstonedanhassett.netlify.app"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true, // <- optional, but needed if you're using cookies or auth headers
   })
 );
+// // Enable CORS for requests from localhost:5173 and https://capstonedanhassett.netlify.app
+// app.use(
+//   cors({
+//     origin: ["http://localhost:5173", "https://capstonedanhassett.netlify.app"]// Allow requests only from local and deployed frontend
+//     methods: ["GET", "POST", "PUT", "DELETE"], // Define allowed HTTP methods
+//     allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
+//   })
+// );
 
 // Middleware for JWT Authentication
 const authenticateJWT = (req, res, next) => {
